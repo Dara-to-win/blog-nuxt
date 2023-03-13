@@ -1,27 +1,51 @@
 <template>
   <transition>
     <div class="low-half">
-      <div class="content">asas</div>
+      <div class="content">
+        <el-tabs v-model="activeName" class="tabs">  <!-- @tab-click="handleClick" -->
+          <el-tab-pane label="推荐" name="recommend">
+            <EssayList />
+          </el-tab-pane>
+          <el-tab-pane label="最新" name="new">
+            <EssayList />
+          </el-tab-pane>
+          <el-tab-pane label="热榜" name="hot">
+            <EssayList />
+          </el-tab-pane>
+        </el-tabs>
+      </div>
       <Sider />
     </div>
   </transition>
 </template>
 
-<script setup>
-import {} from 'vue'
+<script setup lang="ts">
+import {ref} from 'vue'
+import type { TabsPaneContext } from 'element-plus'
+
+const activeName = ref('recommend')
+// const handleClick = (tabs: TabsPaneContext, event: Event) => {
+//   console.log(tabs, event)
+// }
 </script>
 
-<style scoped lang='less'>
+<style lang='less'>
+.is-top {
+  margin-bottom: 0px!important;
+}
 .low-half {
     display: flex;
-    height: 2000px;
     margin: 0 auto;
     margin-top: 74px;
     justify-content: space-between;
     transition: all 0.3s;
     .content {
       width: 100%;
-      background-color: skyblue;
+      background-color: #fff;
+      padding: 0 10px;
+      .tabs {
+        
+      }
     }
     
 }

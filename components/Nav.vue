@@ -4,7 +4,7 @@
       <div class="left">
         <!-- logo区域 -->
         <div class="logo">
-          <a href="/"><img src="@/assets/img/logo.png" alt=""></a>
+          <a href="/"><img src="/img/logo.png" alt=""></a>
           <h1 class="logo-title">个人博客</h1>
         </div>
         <!-- 功能列表 -->
@@ -53,7 +53,7 @@
         <label for="modeCheckBox" class="modeCheck"></label>
 
         <!-- 头像 -->
-        <el-avatar :size="40" fit="cover" src="/_nuxt/assets/img/avatar.jpg" style="margin-left: 15px"></el-avatar>
+        <el-avatar :size="40" fit="cover" src="/img/avatar.jpg" style="margin-left: 15px"></el-avatar>
       </div>
     </div>
   </div>
@@ -83,6 +83,7 @@ const search = ref('');
   top: 0;
   display: flex;
   justify-content: center;
+  z-index: 2;
   .nav {
     width: 100%;
     display: flex;
