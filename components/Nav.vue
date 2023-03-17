@@ -52,10 +52,18 @@
         <input id="modeCheckBox" type="checkbox" @click="changeTheme">
         <label for="modeCheckBox" class="modeCheck"></label>
 
-        <!-- 头像 -->
-        <el-avatar :size="40" fit="cover" src="/img/avatar.jpg" style="margin-left: 15px"></el-avatar>
+        <div class="login">
+          <!-- 登录 | 注册 -->
+          <el-button-group>
+            <el-button type="primary" @click="changeLoginVisible">登录 | 注册</el-button>
+          </el-button-group>
+          <!-- 头像 -->
+          <el-avatar :size="40" fit="cover" src="/img/avatar.jpg" style="margin-left: 15px; display:none"></el-avatar>
+        </div>
       </div>
     </div>
+    <!-- 登录注册界面 -->
+    <LoginDialog :dialogVisible="dialogVisible" v-if="dialogVisible" @dialogVisibleChange="dialogVisibleChange"></LoginDialog>
   </div>
 </template>
 
@@ -64,6 +72,14 @@ import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 
 const search = ref('');
+const dialogVisible = ref(false)
+
+function changeLoginVisible(){
+  dialogVisible.value = true
+}
+const dialogVisibleChange = (flag) => {
+  dialogVisible.value = flag;
+}
 
 </script>
 

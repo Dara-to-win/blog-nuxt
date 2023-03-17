@@ -43,11 +43,7 @@ const activeName = ref('recommend')
       width: 100%;
       background-color: #fff;
       padding: 0 10px;
-      .tabs {
-        
-      }
     }
-    
 }
 @media screen and (min-width: 768px){
     .low-half {

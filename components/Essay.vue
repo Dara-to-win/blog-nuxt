@@ -35,22 +35,23 @@
 
 <script setup lang="ts">
 import {reactive} from 'vue'
-const props = defineProps({
-    essay:{
-        articleID: String,
-        snapshot: String,
-        title: String,
-        preview: String,
-        author: String,
-        viewCount: Number,
-        collectCount: Number,
-        commentCount: Number,
-        avatar: String,
-        category: String,
-        articleStatus: Number,
-        currentTime: String
-    }
-})
+interface Essay {
+    articleID: String,
+    snapshot: String,
+    title: String,
+    preview: String,
+    author: String,
+    viewCount: Number,
+    collectCount: Number,
+    commentCount: Number,
+    avatar: String,
+    category: String,
+    articleStatus: Number,
+    currentTime: String
+}
+const props = defineProps<{
+    essay: Essay
+}>()
 
 </script>
 

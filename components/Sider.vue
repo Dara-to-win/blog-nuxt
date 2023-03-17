@@ -73,7 +73,7 @@ const imgList = ref([
         box-sizing: border-box;
         h2 {
             font-size: 16px;
-            font-weight: 400;
+            // font-weight: 400;
             padding: 5px 10px;
             border-bottom: 1px solid #ccc;
         }

@@ -1,4 +1,4 @@
-// 根据 Hour设置提示语
+// 根据 Hour 和 Day设置提示语
 export const getHelloInfo: () => {helloInfo:string, tipInfo:string} = () => {
     const date:Date = new Date()
     const hour:number = date.getHours()

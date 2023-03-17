@@ -1,3 +1,5 @@
+import { fa } from "element-plus/es/locale";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     app: {
@@ -13,9 +15,9 @@ export default defineNuxtConfig({
       '@/assets/css/base.css',
     ],
     modules: [
-      '@element-plus/nuxt'
+      '@element-plus/nuxt',
     ],
     elementPlus: {
       themes: ['dark']
-    }
+    },
 })
