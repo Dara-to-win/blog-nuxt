@@ -45,6 +45,7 @@ const ruleForm = reactive({
   password: "",
 });
 const checkNumber = (rule: any, value: any, callback: any) => {
+  // console.log("value: ", value)
   // 验证手机号的正则表达式
   const regEmail = /^((13\d)|(14[5,7,9])|(15[0-3,5-9])|(166)|(17[0,1,3,5,7,8])|(18[0-9])|(19[8,9]))\d{8}$/;
   if (regEmail.test(value)) {
@@ -84,10 +85,13 @@ const submitForm = (formEl: FormInstance | undefined) => {
 <style lang="less" scoped>
 .login-form {
   padding-top: 30px;
+  .el-form-item {
+    margin-top: 30px;
+  }
   .submit-btn {
     width: 250px;
     margin: 0 auto;
-    margin-top: 10px;
+    // margin-top: 50px;
   }
 }
 </style>

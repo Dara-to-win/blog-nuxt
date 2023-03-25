@@ -1,9 +1,10 @@
 <template>
-    <NuxtLink v-for="essay in essayList" :to="'/detail/' + essay.articleID"><Essay :essay="essay" /></NuxtLink>
+    <Content v-for="essay in essayList" :essay="essay" />
+    <el-empty v-if="empty" description="空空如也"></el-empty>
 </template>
 
-<script setup>
-import {} from 'vue'
+<script setup lang="ts">
+import {ref} from 'vue'
 const essayList = [
     {
 	"articleID": "1622195620632739842",
@@ -240,6 +241,12 @@ const essayList = [
 	"articleStatus": 0,
 	"currentTime": "2023-02-05T11:29:10.000+00:00"
 }]
+const empty = ref(false)
+onMounted(() => {
+    if(essayList.length === 0)
+        empty.value = true
+})
+
 </script>
 
 <style scoped lang='less'></style>

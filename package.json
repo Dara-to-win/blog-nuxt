@@ -17,6 +17,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "element-plus": "^2.2.36",
     "less": "^4.1.3",
-    "less-loader": "^11.1.0"
+    "less-loader": "^11.1.0",
+    "mitt": "^3.0.0"
   }
 }

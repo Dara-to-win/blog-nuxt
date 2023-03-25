@@ -66,6 +66,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 }
 :deep(.el-dialog) {
   width: 480px; 
+  height: 330px;
 }
 @media screen and (max-width: 1000px){
     :deep(.el-dialog) {

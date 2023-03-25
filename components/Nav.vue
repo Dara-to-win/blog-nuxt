@@ -30,10 +30,7 @@
                   <template #reference>
                     <div><a href="javascript:;">百宝箱</a></div>
                   </template>
-                  <el-tag>前端</el-tag>
-                  <el-tag>前端</el-tag>
-                  <el-tag>前端</el-tag>
-                  <el-tag>前端</el-tag>
+                  <NuxtLink to="/todo"><BaiIcon name="ToDo"></BaiIcon></NuxtLink>
                 </el-popover>
               </client-only>
             </li>
@@ -46,7 +43,7 @@
       </div>
       <div class="right">
         <!-- 创作者中心 -->
-        <el-button type="primary" class="mr-15">创作者中心</el-button>
+        <NuxtLink to="/manage"><el-button type="primary" class="mr-15">创作者中心</el-button></NuxtLink>
 
         <!-- 主题切换图标 -->
         <input id="modeCheckBox" type="checkbox" @click="changeTheme">

@@ -13,11 +13,12 @@ export default defineNuxtConfig({
       },
     css: [
       '@/assets/css/base.css',
+      '@/assets/font/iconfont.css'
     ],
     modules: [
       '@element-plus/nuxt',
     ],
     elementPlus: {
       themes: ['dark']
-    },
+    }
 })
