@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3967096 */
-  src: url('iconfont.woff2?t=1679577761488') format('woff2'),
-       url('iconfont.woff?t=1679577761488') format('woff'),
-       url('iconfont.ttf?t=1679577761488') format('truetype');
+  src: url('iconfont.woff2?t=1682911079328') format('woff2'),
+       url('iconfont.woff?t=1682911079328') format('woff'),
+       url('iconfont.ttf?t=1682911079328') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bianji:before {
+  content: "\e8ac";
+}
+
+.icon-xinzeng:before {
+  content: "\e622";
 }
 
 .icon-todo_list:before {

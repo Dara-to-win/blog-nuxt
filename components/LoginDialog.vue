@@ -16,18 +16,25 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import type { TabsPaneContext } from 'element-plus'
+import { storeToRefs } from "pinia"
 
-const activeName = ref('login')
-const props = defineProps({
-  dialogVisible: {
-    type: Boolean,
-    default: false
-  }
-})
 
-const emits = defineEmits(['dialogVisibleChange'])
+const login = useStore.login();
+
+const { dialogVisible, activeName } = storeToRefs(login);
+
+// const activeName = ref('login')
+// const props = defineProps({
+//   dialogVisible: {
+//     type: Boolean,
+//     default: false
+//   }
+// })
+
+// const emits = defineEmits(['dialogVisibleChange'])
 const handleClose = () => {
-  emits('dialogVisibleChange', false)
+  login.setLoginDialog(false);
+  // emits('dialogVisibleChange', false)
 }
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {

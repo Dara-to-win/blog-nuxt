@@ -7,9 +7,9 @@
     class="login-form"
     hide-required-asterisk
   >
-    <el-form-item label="账号" prop="accout">
+    <el-form-item label="账号" prop="account">
       <el-input
-        v-model="ruleForm.accout"
+        v-model="ruleForm.account"
         type="text"
         prefix-icon="User"
         clearable
@@ -38,10 +38,16 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
+import { storeToRefs } from "pinia"
+
+
+const login = useStore.login();
+
 
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
-  accout: "",
+  account: "",
   password: "",
 });
 const checkNumber = (rule: any, value: any, callback: any) => {
@@ -55,9 +61,9 @@ const checkNumber = (rule: any, value: any, callback: any) => {
   callback(new Error("请输入合法的手机号"));
 };
 const rules = reactive<FormRules>({
-  accout: [
+  account: [
     { required: true, message: "请输入用户名", trigger: "blur" },
-    { validator: checkNumber, trigger: "blur" },
+    // { validator: checkNumber, trigger: "blur" },
   ],
   password: [
     { required: true, message: "请输入登录密码", trigger: "blur" },
@@ -70,13 +76,43 @@ const rules = reactive<FormRules>({
   ],
 });
 
+
+// onMounted(() => {
+//   console.log(getBaseUrl());
+// });
+
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log("submit!");
+      // const { data } = await useFetch("/login", {
+      //   method: "post",
+      //   baseURL: getBaseUrl() ?? "http://39.108.135.247:8888",
+      //   body: {
+      //     account: ruleForm.account,
+      //     password: ruleForm.password
+      //   }
+      // });
+      
+      const result = await useLogin({
+          account: ruleForm.account,
+          password: ruleForm.password
+        }, {});
+      if(result?.code === 200) {
+        ElMessage({
+          message: result.msg === "success"? "登录成功" : result.msg,
+          type: "success"
+        });
+        login.isLogin = true;
+        login.dialogVisible = false;
+        localStorage.setItem("token", result.data);
+      }else{
+        ElMessage({
+          message: result.msg,
+          type: "error"
+        });
+      }
     } else {
-      console.log("error submit!");
       return false;
     }
   });

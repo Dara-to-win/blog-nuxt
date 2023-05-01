@@ -8,6 +8,7 @@
             :checkTodo="checkTodo"
             :deleteTodo="deleteTodo"/>
     </ul>
+    <el-empty description="本日无记录" v-if="todos.length === 0"></el-empty>
   </div>
 </template>
 

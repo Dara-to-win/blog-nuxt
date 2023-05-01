@@ -1,5 +1,5 @@
 <template>
-  <div class="essay">
+  <!-- <div class="essay">
     <div class="info mb-8">
         <span>{{essay.author}}</span>|
         <span>{{essay.category}}</span>|
@@ -30,24 +30,72 @@
         </div>
     </div>
     
+  </div> -->
+
+  <div class="essay">
+    <div class="info mb-8">
+        <span>{{essay.author}}</span>|
+        <span v-for="tag in essay.tags">{{tag.tagName}}</span>|
+    </div>
+    <div class="preview">
+        <div class="left">
+            <h3 class="mb-8">{{essay.title}}</h3>
+            <div class="mb-8">
+                <p class="word">{{essay.summary}}</p>
+            </div>
+            <ul class="feedback">
+                <li>
+                    <img src="/img/view.png" alt="">
+                    <span>{{essay.viewCounts}}</span>
+                </li>
+                <li>
+                    <img src="/img/like.png" alt="">
+                    <span>{{essay.likeCounts}}</span>
+                </li>
+                <li>
+                    <img src="/img/comments.png" alt="">
+                    <span>{{essay.commentCounts}}</span>
+                </li>
+            </ul> 
+        </div>
+        <div class="right" v-if="essay.snapshot !== ''? true:false">
+            <img :src="essay.snapshot" alt="">
+        </div>
+    </div>
+    
   </div>
 </template>
 
 <script setup lang="ts">
 import {reactive} from 'vue'
+// interface Essay {
+//     articleID: String,
+//     snapshot: String,
+//     title: String,
+//     preview: String,
+//     author: String,
+//     viewCount: Number,
+//     collectCount: Number,
+//     commentCount: Number,
+//     avatar: String,
+//     category: String,
+//     articleStatus: Number,
+//     currentTime: String
+// }
 interface Essay {
-    articleID: String,
-    snapshot: String,
+    id: String,
+    // snapshot: String,
     title: String,
-    preview: String,
+    summary: String,
     author: String,
-    viewCount: Number,
-    collectCount: Number,
-    commentCount: Number,
-    avatar: String,
-    category: String,
-    articleStatus: Number,
-    currentTime: String
+    viewCounts: Number,
+    // likeCounts: Number,
+    commentCounts: Number,
+    weight: Number,
+    tags: String,
+    body: Object,
+    createDate: String,
+    category: Object
 }
 const props = defineProps<{
     essay: Essay

@@ -40,3 +40,14 @@ export const getHelloInfo: () => {helloInfo:string, tipInfo:string} = () => {
     }
     return {helloInfo, tipInfo}
 }
+
+export const BASE_URL = "http://39.108.135.247:8888"
+
+export const getBaseUrl = () => {
+    // if(process.server) {
+    //     return "http://39.108.135.247:8888"
+    // }else{
+    //     return "/api"
+    // }
+    return BASE_URL;
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="manage">
-    <NuxtLink to="/editor"><el-button type="primary" round class="editor">发布文章</el-button></NuxtLink>
+    <a href="/editor"><el-button type="primary" round class="editor">发布文章</el-button></a>
     <!-- <el-tabs tab-position="left" >
         <el-tab-pane label="文章管理"><NuxtLink to="/manage/content"><NuxtChild></NuxtChild></NuxtLink></el-tab-pane>
         <el-tab-pane label="评论管理"><NuxtLink to="/manage/comment"><NuxtChild></NuxtChild></NuxtLink></el-tab-pane>

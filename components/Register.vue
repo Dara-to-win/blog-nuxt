@@ -44,7 +44,16 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-// 注册表单数据
+import { ElMessage } from "element-plus";
+import { storeToRefs } from "pinia"
+
+
+const login = useStore.login();
+
+const { dialogVisible, activeName } = storeToRefs(login);
+
+
+// 注册表单数据 
 const registerForm = reactive({
   account: "",
   password: "",
@@ -75,7 +84,7 @@ const validatePass = (rule, value, callback) => {
 const registerFormRules = reactive<FormRules>({
   account: [
     { required: true, message: "请输入手机号", trigger: "blur" },
-    { validator: checkNumber, trigger: "blur", },
+    // { validator: checkNumber, trigger: "blur", },
   ],
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
@@ -88,14 +97,34 @@ const registerFormRules = reactive<FormRules>({
   ]
 });
 const register = (formEl: FormInstance | undefined) => {
-    if(!formEl)    return;
+    if(!formEl) {
+      return;
+    }
     formEl.validate( async valid => {
         if(!valid) {
-            console.log("错误submit");
-            return ;
+          console.log("错误submit");
+          return ;
         }
         else {
-            console.log("注册成功");
+          const { data } = await useFetch("/register", {
+            method: "post",
+            baseURL: getBaseUrl(),
+            body: {
+              account: registerForm.account,
+              password: registerForm.password,
+              nickname: registerForm.account
+            }
+          });
+          // console.log(data.value.msg);
+          if(data.value.code === 200){
+            ElMessage({
+              message: data.value.msg === "success"? "注册成功" : data.value.msg,
+              type: 'success',
+            })
+            login.activeName = "login";
+          }else{
+            ElMessage.error(data.value.msg);
+          }
         }
     });
 };

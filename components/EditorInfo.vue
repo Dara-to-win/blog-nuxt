@@ -20,6 +20,40 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文章标签" prop="dynamicTags">
+        
+        <!-- <el-input
+          v-if="inputVisible"
+          ref="InputRef"
+          v-model="inputValue"
+          class="ml-1 w-20"
+          size="small"
+          @keyup.enter="handleInputConfirm"
+          @blur="handleInputConfirm"
+        /> -->
+        <!-- <div class="tag_selection">
+          <div class="mark_tag">
+            <el-tag
+              v-for="tag in ruleForm.dynamicTags"
+              :key="tag"
+              class="mx-1"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)"
+            >
+              {{ tag }}
+            </el-tag>
+            <el-button
+              class="button-new-tag ml-1"
+              size="small"
+              @click="showInput"
+            >
+              + 添加文章标签
+            </el-button>
+          </div>
+          <div class="tag_box" v-if="inputVisible">
+            <el-tag v-for="tag in allTags">{{tag.tagName}}</el-tag>
+          </div>
+        </div> -->
         <el-tag
           v-for="tag in ruleForm.dynamicTags"
           :key="tag"
@@ -28,25 +62,14 @@
           :disable-transitions="false"
           @close="handleClose(tag)"
         >
-          {{ tag }}
+          {{ tag.tagName }}
         </el-tag>
-        <el-input
-          v-if="inputVisible"
-          ref="InputRef"
-          v-model="inputValue"
-          class="ml-1 w-20"
-          size="small"
-          @keyup.enter="handleInputConfirm"
-          @blur="handleInputConfirm"
-        />
-        <el-button
-          v-else
-          class="button-new-tag ml-1"
-          size="small"
-          @click="showInput"
-        >
-          + New Tag
-        </el-button>
+        <el-popover placement="top" :width="300" trigger="click">
+          <template #reference>
+            <el-button class="button-new-tag ml-1" size="small" @click="showInput">+ 添加文章标签</el-button>
+          </template>
+          <el-tag v-for="tag in allTags" style="margin: 5px 5px" @click="addTag(tag)">{{tag.tagName}}</el-tag>
+        </el-popover>
       </el-form-item>
       <el-form-item label="文章摘要" prop="desc">
         <el-input v-model="ruleForm.desc" type="textarea" />
@@ -54,10 +77,15 @@
       <el-form-item label="文章封面" prop="cover">
         <el-upload
           class="avatar-uploader"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
+          action
+          list-type="picture-card"
+          :limit="2"
+          :file-list="imageList"
+          :on-change="handleChangeImage"
+          :show-file-list="true"
           :before-upload="beforeAvatarUpload"
+          accept=".jpg, .jpeg, .png"
+          :http-request="uploadImage"
         >
           <img
             v-if="ruleForm.imageUrl"
@@ -78,12 +106,17 @@
 
 <script setup lang="ts">
 import { reactive, ref, nextTick } from "vue";
-import type { FormInstance, FormRules, ElInput } from "element-plus";
+import type { FormInstance, FormRules, ElInput, UploadRequestOptions } from "element-plus";
 import { ElMessage } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import type { UploadProps } from "element-plus";
-import emitter from "~~/plugins/eventBus";
-import func from "~~/vue-temp/vue-editor-bridge";
+import { storeToRefs } from "pinia";
+
+
+const editor = useStore.editor();
+const login = useStore.login();
+
+const allTags = ref([]);
 
 const inputValue = ref("");
 const inputVisible = ref(false);
@@ -97,6 +130,12 @@ const ruleForm = reactive({
   dynamicTags: [],
   blogText: "",
 });
+const imageList = [];
+const handleChangeImage = (file, fileList) => {
+  if(fileList.length > 1) {
+    fileList.splice(0, 1);
+  }
+}
 const checkTag = (rule, value, callback) => {
     console.log("value: ", value)
     if(value.length === 0)
@@ -128,12 +167,41 @@ const handleClose = (tag: string) => {
   ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
 };
 
-const showInput = () => {
+const showInput = async () => {
   inputVisible.value = true;
-  nextTick(() => {
-    InputRef.value!.input!.focus();
-  });
+  // nextTick(() => {
+  //   // InputRef.value!.input!.focus();
+  // });
+  const result = await getAllTags();
+  if(result.code === 200) {
+    allTags.value = result.data;
+    // console.log("allTags: ", allTags.value);
+  }else{
+    ElMessage({
+      message: result.msg,
+      type: "error"
+    });
+  }
 };
+
+const addTag = (tag) => {
+  if(ruleForm.dynamicTags.length >= 3) {
+    ElMessage({
+      message: "标签不能超过3",
+      type: "error"
+    });
+  }else{
+    if(ruleForm.dynamicTags.indexOf(tag) === -1) {
+      console.log("ruleForm.dynamicTags: ", ruleForm.dynamicTags);
+      ruleForm.dynamicTags.push(tag);
+    }else{
+      ElMessage({
+        message: "标签不可重复",
+        type: "error"
+      });
+    }
+  }
+}
 
 const handleInputConfirm = () => {
   if (inputValue.value) {
@@ -143,40 +211,49 @@ const handleInputConfirm = () => {
   inputValue.value = "";
 };
 
-const handleAvatarSuccess: UploadProps["onSuccess"] = (
-  response,
-  uploadFile
-) => {
-  ruleForm.imageUrl.value = URL.createObjectURL(uploadFile.raw!);
-};
+
+const uploadImage = async (options: UploadRequestOptions) => {
+  let fd = new FormData();
+  fd.append("image", options.file);
+  const { data } = await useFetch("/upload", {
+    method: "post",
+    baseURL: getBaseUrl(),
+    body: fd
+  });
+  // console.log(data.value.msg);
+  if(data.value.code === 200){
+    ElMessage({
+      message: data.value.msg === "success"? "上传成功" : data.value.msg,
+      type: 'success',
+    })
+    ruleForm.imageUrl = data.value.data;
+  }else{
+    ElMessage.error(data.value.msg);
+  }
+}
 
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
-  if (rawFile.type !== "image/jpeg") {
+  if (rawFile.type !== "image/jpeg" && rawFile.type !== "image/png") {
     ElMessage.error("Avatar picture must be JPG format!");
     return false;
-  } else if (rawFile.size / 1024 / 1024 > 2) {
+  } else if (rawFile.size / 1024 / 1024 > 5) {
     ElMessage.error("Avatar picture size can not exceed 2MB!");
     return false;
   }
   return true;
 };
 
-const { $emitter } = useNuxtApp();
-$emitter.on("response", (response) => {
-  // console.log("response: ", response)
-  ruleForm.blogText = response;
-});
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      if (ruleForm.blogText === "<p><br></p>") {
+      if (editor.blogText === "<p><br></p>") {
         // console.log("blogText.value: ", blogText)
         ElMessage.error("博客内容不能为空");
         return;
       }
-      console.log("blogText: ", ruleForm.blogText);
+      console.log("blogText: ", editor.blogText);
       console.log("submit!");
     } else {
       console.log("error submit!", fields);
@@ -212,6 +289,21 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   padding: 20px;
   width: 100%;
   background-color: #fff;
+  .tag_selection {
+    position: relative;
+    .tag_box {
+      width: 300px;
+      position: absolute;
+      z-index: 10;
+      background-color: #fff;
+      border: 1px solid #e3e3e3;
+      box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+      // display: none;
+      .el-tag {
+        margin: 10px;
+      }
+    }
+  }
   .avatar-uploader .avatar {
     width: 178px;
     height: 178px;
