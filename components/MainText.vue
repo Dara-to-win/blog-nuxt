@@ -2,7 +2,7 @@
   <div class="main-text">
     <h1 class="title">{{contentText.title}}</h1>
     <div class="author">
-        <el-avatar :size="40" fit="cover" :src="contentText.authorImg" style="margin-left: 15px"></el-avatar>
+        <el-avatar :size="40" fit="cover" :src="BASE_URL + contentText.authorImg" style="margin-left: 15px"></el-avatar>
         <div class="right">
             <h5>{{contentText.authorName}}</h5>
             <p>{{contentText.time}}</p>

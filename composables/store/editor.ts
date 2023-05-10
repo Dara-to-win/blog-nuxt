@@ -4,7 +4,8 @@ import { defineStore } from 'pinia';
 export const editor = defineStore("editor", {
     state: () => ({
         blogText: "",
-        keyword: ""
+        keyword: "",
+        snapshot: ""
     }),
 
     getters: {

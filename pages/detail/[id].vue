@@ -9,11 +9,11 @@
             </li>
             <li>
               <i class="iconfont icon-pinglun1"></i>
-              <span class="number">{{contentText.likeCounts}}</span>
+              <span class="number">{{contentText.commentCounts}}</span>
             </li>
             <li>
               <i class="iconfont icon-shoucangxuanzhong"></i>
-              <span class="number">{{contentText.likeCounts}}</span>
+              <span class="number">{{contentText.collectCounts}}</span>
             </li>
           </ul>
         </el-affix>
@@ -87,9 +87,10 @@ const mainRef = (el) => lis.value.push(el);
 // const mainRef = ref<null | HTMLElement>(null);
 onMounted(()=> {
   setTimeout(()=>{
-    getTitle();
+    // getTitle();
     getArticles();
-  }, 1000)
+    getAuthor();
+  }, 500)
 })
 
 async function getArticles() {
@@ -99,20 +100,39 @@ async function getArticles() {
   if(result.code === 200) {
     contentText.content = result?.data.body.content;
     contentText.title = result?.data.title;
-    contentText.authorName = result?.data.author;
-    contentText.authorImg = "";
-    contentText.authorIntro = "";
+    contentText.authorId = result?.data.authorId;
     contentText.time = result?.data.createDate;
-    contentText.cover = "";
-    contentText.likeCounts = 168;
-    contentText.collectCounts = 111;
+    contentText.cover = result?.data.snapshotImg;
+    contentText.likeCounts = result?.data.likeCounts;
+    contentText.collectCounts = result?.data.collectCounts;
     contentText.commentCounts = result?.data.commentCounts;
+    contentText.viewCounts = result?.data.viewCounts;
   }else{
     ElMessage({
       message: result.msg,
       type: "error",
     });
   }
+}
+
+async function getAuthor() {
+  setTimeout(async ()=>{
+    console.log("contentText.value: ", contentText);
+    console.log("contentText.authorId: ", contentText.authorId);
+    const result = await getAuthorInfo({}, {}, contentText.authorId);
+    if(result.code === 200) {
+      contentText.authorName = result?.data.nickname;
+      contentText.authorImg = result?.data.avatar;
+      contentText.authorIntro = result?.data.introduce;
+    }else{
+      ElMessage({
+        message: result.msg,
+        type: "error",
+      });
+    }
+    console.log("author: ", result);
+    console.log("contentText.authorId: ", contentText.authorId);
+  }, 500);
 }
 
 const getTitle = () => {

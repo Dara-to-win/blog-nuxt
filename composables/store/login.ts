@@ -8,7 +8,8 @@ export const login = defineStore("login", {
         isLogin: false,
         userAvatar: "",
         loginToken: "",
-        pageTheme: "theme-white"
+        pageTheme: "theme-white",
+        id: ""
     }),
 
     getters: {

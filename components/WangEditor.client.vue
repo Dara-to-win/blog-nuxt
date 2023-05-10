@@ -47,8 +47,8 @@ editorConfig.MENU_CONF['uploadImage'] = {
     // server: getBaseUrl() + '/upload',
     async customUpload(file: File, insertFn: InsertFnType) {
       let fd = new FormData();
-      fd.append("image", file);
-      const { data } = await useFetch("/upload", {
+      fd.append("snapshot", file);
+      const { data } = await useFetch("/upload/addImg", {
         method: "post",
         baseURL: getBaseUrl(),
         body: fd
@@ -59,7 +59,9 @@ editorConfig.MENU_CONF['uploadImage'] = {
           message: data.value.msg === "success"? "上传成功" : data.value.msg,
           type: 'success',
         })
-        insertFn(data.value.data, "图片", data.value.data);
+        console.log("data.value: ", data.value);
+        
+        insertFn(`http://39.108.135.247:8888/upload/getImgById/${data.value.data}`, `http://39.108.135.247:8888/upload/getImgById/${data.value.data}`);
       }else{
         ElMessage.error(data.value.msg);
       }

@@ -25,7 +25,7 @@ import type { TabsPaneContext } from "element-plus";
 
 const activeName = ref("recommend");
 const handleClick = (tabs: TabsPaneContext, event: Event) => {
-  console.log(tabs, event);
+  // console.log(tabs, event);
 };
 </script>
 

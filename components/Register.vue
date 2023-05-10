@@ -123,6 +123,7 @@ const register = (formEl: FormInstance | undefined) => {
             })
             login.activeName = "login";
           }else{
+            console.log("register: ", data.value)
             ElMessage.error(data.value.msg);
           }
         }

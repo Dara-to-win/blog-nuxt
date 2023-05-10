@@ -166,6 +166,8 @@ watch(isLogin, async () => {
     );
     if (result?.code === 200) {
       // console.log(data.value.data);
+      // login.userAvatar = result.data.avatar;
+      // let temp = result.data.avatar.split("/");
       login.userAvatar = result.data.avatar;
     } else {
       ElMessage({
@@ -190,14 +192,24 @@ onMounted(async () => {
   }
 });
 
-async function searchContent() {
+function searchContent() {
   // const result = await getSearchArticles({
   //   search: search.value
   // }, {});
   if(keyword.value !== ""){
-    await navigateTo({path: "/search", query: {keyword: keyword.value}}, {replace: true});
+    let timerID = null;
+    debounce(1000);
+    function debounce(time) { // 防抖
+      if(timerID !== null) {
+        clearTimeout(timerID);
+      }
+      timerID = setTimeout(async () => {
+        await navigateTo({path: "/search", query: {keyword: keyword.value}}, {replace: true});
+      }, time);
+    }
   }
 }
+
 
 async function getCurrentUser() {
   const result = await useCurrentUser(
@@ -207,8 +219,11 @@ async function getCurrentUser() {
     }
   );
   if (result?.code === 200) {
-    // console.log(data.value.data);
+    // console.log("result.data.avatar: ", result.data.avatar);
+    // let temp = result.data.avatar.split("/");
     login.userAvatar = result.data.avatar;
+    login.id = result.data.id;
+    // console.log("login.userAvatar: ", login.userAvatar);
   } else {
     ElMessage({
       message: result.msg,

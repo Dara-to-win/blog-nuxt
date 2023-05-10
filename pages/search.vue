@@ -20,6 +20,9 @@ const essayList = ref([]);
 
 onMounted(() => {
   setTimeout(async () => {
+    if(keyword.value === "") {
+      keyword.value = route.query.keyword;
+    }
     const result = await getSearchArticles({
       search: keyword
     }, {});
@@ -30,11 +33,20 @@ onMounted(() => {
 });
 
 watch(keyword, async () => {
-  const result = await getSearchArticles({
-    search: keyword
-  }, {});
-  essayList.value = result.data;
-  console.log("search: ", essayList.value);
+  let timerID = null;
+  debounce(1000);
+  function debounce(time) { // 防抖
+    if(timerID !== null) {
+      clearTimeout(timerID);
+    }
+    timerID = setTimeout(async () => {
+      const result = await getSearchArticles({
+        search: keyword
+      }, {});
+      essayList.value = result.data;
+      // console.log("search: ", essayList.value);
+    }, time);
+  }
 })
 
 // editor.$subscribe((mutation: any, state: any) => {

@@ -1,21 +1,21 @@
 <template>
   <div class="author">
     <div class="info">
-        <el-avatar :size="40" fit="cover" :src="contentText.authorImg" style="margin-left: 15px"></el-avatar>
+        <el-avatar :size="40" fit="cover" :src="BASE_URL + contentText.authorImg" style="margin-left: 15px"></el-avatar>
         <div class="right">
             <h5>{{contentText.authorName}}</h5>
-            <p>{{contentText.authorIntro}}</p>
+            <p>{{contentText.authorIntro  || "这个人很神秘！"}}</p>
         </div>
     </div>
     <div class="record">
         <ul>
             <li>
                 <i class="iconfont icon-dianzan_kuai"></i>
-                <span >获得点赞 {{contentText.zan}}</span>
+                <span >获得点赞 {{contentText.likeCounts}}</span>
             </li>
             <li>
                 <i class="iconfont icon-yanjing"></i>
-                <span >文章被阅读 {{contentText.zan}}</span>
+                <span >文章被阅读 {{contentText.viewCounts}}</span>
             </li>
         </ul>
     </div>

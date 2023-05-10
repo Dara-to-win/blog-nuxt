@@ -92,7 +92,7 @@
             :src="ruleForm.imageUrl"
             class="avatar"
           />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
       </el-form-item>
       <el-form-item>
@@ -137,7 +137,7 @@ const handleChangeImage = (file, fileList) => {
   }
 }
 const checkTag = (rule, value, callback) => {
-    console.log("value: ", value)
+    // console.log("value: ", value)
     if(value.length === 0)
         callback(new Error("请输入文章标签"))
     else
@@ -187,12 +187,12 @@ const showInput = async () => {
 const addTag = (tag) => {
   if(ruleForm.dynamicTags.length >= 3) {
     ElMessage({
-      message: "标签不能超过3",
+      message: "标签不能超过3个",
       type: "error"
     });
   }else{
     if(ruleForm.dynamicTags.indexOf(tag) === -1) {
-      console.log("ruleForm.dynamicTags: ", ruleForm.dynamicTags);
+      // console.log("ruleForm.dynamicTags: ", ruleForm.dynamicTags);
       ruleForm.dynamicTags.push(tag);
     }else{
       ElMessage({
@@ -214,8 +214,8 @@ const handleInputConfirm = () => {
 
 const uploadImage = async (options: UploadRequestOptions) => {
   let fd = new FormData();
-  fd.append("image", options.file);
-  const { data } = await useFetch("/upload", {
+  fd.append("snapshot", options.file);
+  const { data } = await useFetch("/upload/addImg", {
     method: "post",
     baseURL: getBaseUrl(),
     body: fd
@@ -226,7 +226,15 @@ const uploadImage = async (options: UploadRequestOptions) => {
       message: data.value.msg === "success"? "上传成功" : data.value.msg,
       type: 'success',
     })
-    ruleForm.imageUrl = data.value.data;
+    // const getImg = await useFetch(`/upload/getImgById/${data.value.data}`, {
+    //   method: "get",
+    //   baseURL: getBaseUrl(),
+    // });
+    // console.log("getImg ", getImg);
+    // ruleForm.imageUrl = `http://39.108.135.247:8888/upload/getImgById/287767590862849`;
+    // editor.snapshot = `http://39.108.135.247:8888/upload/getImgById/287767590862849`; // data.value.data
+    editor.snapshot = `http://39.108.135.247:8888/upload/getImgById/${data.value.data}`;
+    // console.log("image: ", ruleForm.imageUrl);
   }else{
     ElMessage.error(data.value.msg);
   }
@@ -246,17 +254,40 @@ const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
       if (editor.blogText === "<p><br></p>") {
         // console.log("blogText.value: ", blogText)
         ElMessage.error("博客内容不能为空");
         return;
       }
-      console.log("blogText: ", editor.blogText);
-      console.log("submit!");
+      const data = await publishArticle({
+        body: {
+          content: editor.blogText 
+        },
+        // author: login.id,
+        tags: ruleForm.dynamicTags,
+        category: ruleForm.type,
+        summary: ruleForm.desc,
+        title: ruleForm.title,
+        snapshotImg: editor.snapshot
+      }, {
+        Authorization: login.loginToken
+      });
+      console.log("Blog data: ", data);
+      if(data?.code === 200){
+        ElMessage({
+          message: data?.msg === "success"? "发布成功" : data.msg,
+          type: 'success',
+        })
+        await navigateTo("/");
+      }else{
+        ElMessage.error(data?.msg);
+      }
+      // console.log("blogText: ", editor.blogText);
+      // console.log("submit!");
     } else {
-      console.log("error submit!", fields);
+      // console.log("error submit!", fields);
     }
   });
 };

@@ -251,7 +251,7 @@ const essayList = ref([]);
 onMounted(() => {
 	setTimeout(() => {
 		getEssayList();
-		console.log("essayList.value: ", essayList.value);
+		// console.log("essayList.value: ", essayList.value);
 	}, 1000);
 	
 });
@@ -275,8 +275,8 @@ async function getEssayList() {
 			message: result?.msg,
 			type: "error"
 		});
-		console.log("get faild")
-		console.log(result);
+		// console.log("get faild")
+		// console.log(result);
 	}
 }
 async function goEssayDetail(path) {

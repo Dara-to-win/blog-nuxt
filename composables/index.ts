@@ -60,3 +60,19 @@ export const getSearchArticles = (params?: { search?: string }, headers: any) =>
 export const getAllTags = (params?: {}, headers: any) => {
     return Http.get(`/tags`, params, headers)
 }
+
+
+/**
+ * 发布文章
+ */
+export const publishArticle = (params?: any, headers: any) => {
+    return Http.post(`/articles/publish`, params, headers)
+}
+
+
+/**
+ * 根据用户ID获取用户详细信息
+ */
+export const getAuthorInfo = (params?: any, headers: any, authorId: string) => {
+    return Http.get(`/users/userInfo/${authorId}`, params, headers)
+}

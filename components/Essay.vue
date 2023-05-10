@@ -34,7 +34,7 @@
 
   <div class="essay">
     <div class="info mb-8">
-        <span>{{essay.author}}</span>|
+        <span>{{author.name}}</span>|
         <span v-for="tag in essay.tags">{{tag.tagName}}</span>|
     </div>
     <div class="preview">
@@ -58,8 +58,8 @@
                 </li>
             </ul> 
         </div>
-        <div class="right" v-if="essay.snapshot !== ''? true:false">
-            <img :src="essay.snapshot" alt="">
+        <div class="right" v-if="essay.snapshotImg !== ''? true:false">
+            <img :src="essay.snapshotImg" alt="">
         </div>
     </div>
     
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import {reactive} from 'vue'
+import {reactive, ref} from 'vue'
 // interface Essay {
 //     articleID: String,
 //     snapshot: String,
@@ -84,22 +84,50 @@ import {reactive} from 'vue'
 // }
 interface Essay {
     id: String,
-    // snapshot: String,
+    snapshotImg: String,
     title: String,
     summary: String,
-    author: String,
+    authorId: String,
     viewCounts: Number,
-    // likeCounts: Number,
+    likeCounts: Number,
     commentCounts: Number,
+    collectCounts: Number,
     weight: Number,
-    tags: String,
+    tags: Array,
     body: Object,
     createDate: String,
-    category: Object
+    category: String
 }
 const props = defineProps<{
     essay: Essay
 }>()
+const author = ref({
+    name: ""
+})
+// onMounted(()=>{
+//     // console.log("onMounted!!!");
+//     setTimeout(()=>{
+//         getAuthorInfo();
+//     }, 1000);
+// })
+
+watch(props.essay, (newValue, oldValue) => {
+    getAuthor(newValue);
+}, {immediate: true});
+
+async function getAuthor(value) {
+    // const { data } = await useFetch(`/users/userInfo/${value.authorId}`, {
+    //     method: "get",
+    //     baseURL: getBaseUrl(),
+    // });
+    const result = await getAuthorInfo({}, {}, value.authorId);
+    // console.log("essay.authorId: ", value.authorId)
+    // console.log("result: ", result);
+    // author.value.name = data.value.authorId;
+    author.value.name = result.data.nickname;
+    // console.log("data.value.nickname: ", data.value.data.nickname);
+    // console.log("author.value.name: ", author.value.name);
+}
 
 </script>
 
@@ -166,5 +194,8 @@ const props = defineProps<{
             }
         }
     }
+}
+.essay:hover {
+    background-color: rgba(204, 204, 204, .2);
 }
 </style>
