@@ -9,11 +9,11 @@
           style="margin-left: 15px; outline: none; width:60px; height:60px;"
         ></el-avatar>
         <div style="margin-left: 15px;" class="info">
-          <h2 style="font-weight: 400;">清风明月</h2>
-          <span>{{100000}}总访问量</span>
-          <span style="margin-left: 10px;">{{1000}}粉丝</span>
-          <span style="margin-left: 10px;">{{100}}排名</span>
-          <span style="margin-left: 10px;">{{100}}原创</span>
+          <h2 style="font-weight: 400;">{{personal.nickname}}</h2>
+          <span>{{100}}总访问量</span>
+          <span style="margin-left: 10px;">{{0}}粉丝</span>
+          <span style="margin-left: 10px;">{{0}}排名</span>
+          <span style="margin-left: 10px;">{{0}}原创</span>
         </div>
       </div>
       <div class="bottom">
@@ -31,7 +31,7 @@
                 <li>
                     <div class="left">用户昵称：</div>
                     <div class="right">
-                        <span v-if="!personal.isEditor">{{nickname}}</span>
+                        <span v-if="!personal.isEditor">{{personal.nickname}}</span>
                         <el-input v-else v-model="nickname"></el-input>
                     </div>
                 </li>
@@ -42,7 +42,7 @@
                         <span>ID：</span>
                     </div>
                     <div class="right">
-                        <span>{{id}}</span>
+                        <span>{{personal.id}}</span>
                     </div>
                 </li>
                 <li>
@@ -51,28 +51,28 @@
                         <span>别：</span>
                     </div>
                     <div class="right">
-                        <span v-if="!personal.isEditor">{{sex}}</span>
+                        <span v-if="!personal.isEditor">{{personal.sex || "无"}}</span>
                         <el-input v-else v-model="sex"></el-input>
                     </div>
                 </li>
                 <li>
                     <div class="left">个人简介：</div>
                     <div class="right">
-                        <span v-if="!personal.isEditor">{{introduce}}</span>
+                        <span v-if="!personal.isEditor">{{personal.introduce || "无"}}</span>
                         <el-input v-else v-model="introduce"></el-input>
                     </div>
                 </li>
                 <li>
                     <div class="left">所在地区：</div>
                     <div class="right">
-                        <span v-if="!personal.isEditor">{{area}}</span>
+                        <span v-if="!personal.isEditor">{{personal.area || "无"}}</span>
                         <el-input v-else v-model="area"></el-input>
                     </div>
                 </li>
                 <li>
                     <div class="left">出生日期：</div>
                     <div class="right">
-                        <span v-if="!personal.isEditor">{{birth}}</span>
+                        <span v-if="!personal.isEditor">{{personal.birth || "无"}}</span>
                         <el-input v-else v-model="birth"></el-input>
                     </div>
                 </li>
@@ -106,12 +106,27 @@ async function getCurrentUser() {
       Authorization: login.loginToken,
     }
   );
+  console.log("useCurrentUser: ", result);
   if (result?.code === 200) {
     // console.log(data.value.data);
     // personal.setPersonal(result.data);
-    personal.userAvatar = result.data.avatar;
+    // personal.userAvatar = result.data.avatar;
     personal.id = result.data.id;
-    personal.nickname = result.data.nickname;
+    // personal.nickname = result.data.nickname;
+    const result2 = await getAuthorInfo({}, {}, personal.id);
+    if(result2?.code === 200) {
+      personal.userAvatar = result2.data.avatar;
+      personal.nickname = result2.data.nickname;
+      personal.sex = result2.data.sex;
+      personal.introduce = result2.data.introduce;
+      personal.area = result2.data.area;
+      personal.birth = result2.data.birth;
+    }else {
+      ElMessage({
+        message: result2.msg,
+        type: "error",
+      });
+    }
   } else {
     ElMessage({
       message: result.msg,

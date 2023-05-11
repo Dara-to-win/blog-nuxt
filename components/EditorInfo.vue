@@ -233,6 +233,7 @@ const uploadImage = async (options: UploadRequestOptions) => {
     // console.log("getImg ", getImg);
     // ruleForm.imageUrl = `http://39.108.135.247:8888/upload/getImgById/287767590862849`;
     // editor.snapshot = `http://39.108.135.247:8888/upload/getImgById/287767590862849`; // data.value.data
+    console.log("editor.snapshot: ", data.value.data);
     editor.snapshot = `http://39.108.135.247:8888/upload/getImgById/${data.value.data}`;
     // console.log("image: ", ruleForm.imageUrl);
   }else{

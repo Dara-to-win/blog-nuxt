@@ -117,8 +117,8 @@ async function getArticles() {
 
 async function getAuthor() {
   setTimeout(async ()=>{
-    console.log("contentText.value: ", contentText);
-    console.log("contentText.authorId: ", contentText.authorId);
+    // console.log("contentText.value: ", contentText);
+    // console.log("contentText.authorId: ", contentText.authorId);
     const result = await getAuthorInfo({}, {}, contentText.authorId);
     if(result.code === 200) {
       contentText.authorName = result?.data.nickname;
@@ -130,8 +130,8 @@ async function getAuthor() {
         type: "error",
       });
     }
-    console.log("author: ", result);
-    console.log("contentText.authorId: ", contentText.authorId);
+    // console.log("author: ", result);
+    // console.log("contentText.authorId: ", contentText.authorId);
   }, 500);
 }
 

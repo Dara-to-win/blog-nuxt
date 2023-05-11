@@ -82,11 +82,7 @@
       </div>
       <div class="right">
         <!-- 创作者中心 -->
-        <NuxtLink to="/manage/content"
-          ><el-button type="primary" class="mr-15"
-            >创作者中心</el-button
-          ></NuxtLink
-        >
+        <el-button type="primary" class="mr-15" @click="goManage">创作者中心</el-button>
 
         <!-- 主题切换图标 -->
         <input
@@ -269,6 +265,17 @@ function changeTheme() {
 
 function changeLoginVisible() {
   login.setLoginDialog(true);
+}
+
+async function goManage() {
+  if(login.loginToken === ""){
+    ElMessage({
+      message: "请先登录！",
+      type: "error",
+    });
+  } else {
+    await navigateTo("/manage/content");
+  }
 }
 
 async function goTodoList(path) {

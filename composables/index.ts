@@ -6,12 +6,14 @@ import Http from '@/utils/http'
 export const useLogin = (params?: { account?: string, password?: string }, headers: any) => {
     return Http.post('/login', params, headers)
 }
+
 /**
  * 获取用户信息
  */
 export const useCurrentUser = (params?: { }, headers: any) => {
     return Http.get('/users/currentUser', params, headers)
 }
+
 /**
  * 获取文章列表
  */
@@ -76,3 +78,5 @@ export const publishArticle = (params?: any, headers: any) => {
 export const getAuthorInfo = (params?: any, headers: any, authorId: string) => {
     return Http.get(`/users/userInfo/${authorId}`, params, headers)
 }
+
+
